@@ -11,6 +11,13 @@ const config: Config = {
       fontFamily: {
         sans: ["Poppins", "sans-serif"],
       },
+      colors: {
+        grey: "#181818",
+        gray: "#242424",
+        lightgray: "#989898",
+        lightgrey: "#FCFCFC",
+        ash: "#d8d8d8",
+      },
     },
   },
   plugins: [],
