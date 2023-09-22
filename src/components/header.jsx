@@ -38,7 +38,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-30 bg-[#ff5656] backdrop-blur-[2px] shadow-[0px_2px_4px_rgba(0,0,0,0.25)] stroke-[2] stroke-[rgb(232,232,232/0.20)]">
-      <div className="max-w-7xl mx-auto flex justify-between items-center py-6">
+      <div className="max-w-7xl mx-auto flex justify-between items-center py-4 xl:py-6 px-4 xl:px-0">
         <Link href="" className="flex gap-4 items-center">
           <Image
             src="/assets/images/logo.png"

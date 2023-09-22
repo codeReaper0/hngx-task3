@@ -18,24 +18,12 @@ const initialImages = [
   {id: 12, tag: "car", src: "/assets/images/img12.jpg"},
 ];
 
-const itemsPerRow = 4;
-
 const getItemStyle = (isDragging, draggableStyle) => ({
   userSelect: "none",
   padding: 0,
   margin: 0,
   background: isDragging ? "lightgrey" : "transparent",
   ...draggableStyle,
-});
-
-const getListStyle = (isDraggingOver) => ({
-  background: isDraggingOver ? "transparent" : "transparent",
-  padding: 0,
-  display: "grid",
-  gridTemplateColumns: `repeat(${itemsPerRow}, 1fr)`,
-  gap: "24px",
-  width: "100%",
-  height: "100%",
 });
 
 export default function AuthGallery() {
@@ -48,7 +36,7 @@ export default function AuthGallery() {
       setLoading(false);
     }, 3000); // 3 seconds
 
-    // Clear the timer if the component unmounts or if searchTerm changes
+    // Clear the timer if the component unmounts
     return () => {
       clearTimeout(timer);
     };
@@ -88,7 +76,7 @@ export default function AuthGallery() {
   return loading ? (
     <CardLoader itemCount={initialImages.length} />
   ) : (
-    <div className="max-w-7xl mx-auto ">
+    <div className="max-w-7xl mx-auto">
       <input
         type="text"
         placeholder="Search by tag..."
@@ -96,14 +84,16 @@ export default function AuthGallery() {
         onChange={handleSearchInputChange}
         className="block w-full px-4 py-2 mt-4 mb-2 border border-gray rounded-md focus:ring focus:ring-blue-200"
       />
-      <div style={{display: "flex", flexWrap: "wrap"}}>
+      <div className="image-grid">
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="imageGrid" direction="horizontal">
             {(provided, snapshot) => (
               <div
                 ref={provided.innerRef}
-                style={getListStyle(snapshot.isDraggingOver)}
                 {...provided.droppableProps}
+                className={`image-grid__container ${
+                  images.length <= 2 ? "image-grid--two-columns" : ""
+                }`}
               >
                 {images.map((item, index) => (
                   <Draggable
@@ -121,16 +111,12 @@ export default function AuthGallery() {
                           provided.draggableProps.style
                         )}
                       >
-                        <div
-                          key={item.id}
-                          className="relative rounded-lg overflow-hidden"
-                        >
+                        <div className="relative rounded-lg overflow-hidden h-full">
                           <Image
                             src={item.src}
-                            width={600}
-                            height={600}
+                            layout="fill"
+                            objectFit="cover"
                             alt="Gallery Image"
-                            className="object-cover object-center w-auto h-full"
                           />
                           <p className="py-1 px-2 rounded absolute top-4 left-4 bg-red-500/80 text-white text-sm">
                             {item.tag}
@@ -145,6 +131,37 @@ export default function AuthGallery() {
           </Droppable>
         </DragDropContext>
       </div>
+      <style jsx>{`
+        .image-grid__container {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 24px;
+        }
+
+        .image-grid--two-columns {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        @media screen and (max-width: 640px) {
+          .image-grid__container {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+
+        .relative {
+          position: relative;
+          width: 100%;
+          padding-bottom: 100%; /* Maintain 1:1 aspect ratio for images */
+        }
+
+        .Image {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        }
+      `}</style>
     </div>
   );
 }

@@ -2,6 +2,8 @@
 import Image from "next/image";
 import React, {useEffect, useState} from "react";
 import {CardLoader} from "@/components/loader/cardLoader";
+import {ToastContainer, toast} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const images = [
   {id: 1, tag: "nature", src: "/assets/images/img1.jpg"},
@@ -23,6 +25,14 @@ export default function Gallery() {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
+    toast.info("You have to be logged in to use the drag and drop feature", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      theme: "dark",
+    });
+  }, []);
+  useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
     }, 3000); // 3 seconds
@@ -42,35 +52,47 @@ export default function Gallery() {
     image.tag.toLowerCase().includes(searchTerm)
   );
 
-  return loading ? (
-    <CardLoader itemCount={12} />
-  ) : (
-    <div className="max-w-7xl mx-auto ">
-      <input
-        type="text"
-        placeholder="Search by tag..."
-        value={searchTerm}
-        onChange={handleSearchInputChange}
-        className="block w-full px-4 py-2 mt-4 mb-2 border border-gray rounded-md focus:ring focus:ring-blue-200"
-      />
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredImages.map((image) => {
-          return (
-            <div key={image.id} className="relative rounded-lg overflow-hidden">
-              <Image
-                src={image.src}
-                width={600}
-                height={600}
-                alt="Gallery Image"
-                className="object-cover object-center w-auto h-full"
-              />
-              <p className="py-1 px-2 rounded absolute top-4 left-4 bg-red-500/80 text-white text-sm">
-                {image.tag}
-              </p>
-            </div>
-          );
-        })}
-      </div>
-    </div>
+  return (
+    <>
+      <ToastContainer />
+
+      {loading ? (
+        <CardLoader itemCount={12} />
+      ) : (
+        <div className="max-w-7xl mx-auto ">
+          <input
+            type="text"
+            placeholder="Search by tag..."
+            value={searchTerm}
+            onChange={handleSearchInputChange}
+            className="block w-full px-4 py-2 mt-4 mb-2 border border-gray rounded-md focus:ring focus:ring-blue-200"
+          />
+          <div
+            className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+            style={{gridAutoRows: "302px"}}
+          >
+            {filteredImages.map((image) => {
+              return (
+                <div
+                  key={image.id}
+                  className="relative rounded-lg overflow-hidden"
+                >
+                  <Image
+                    src={image.src}
+                    layout="fill"
+                    objectFit="cover"
+                    alt="Gallery Image"
+                    className="object-cover object-center w-auto h-full"
+                  />
+                  <p className="py-1 px-2 rounded absolute top-4 left-4 bg-red-500/80 text-white text-sm">
+                    {image.tag}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
