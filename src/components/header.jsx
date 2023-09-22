@@ -9,6 +9,7 @@ import {onAuthStateChanged} from "firebase/auth";
 
 export default function Header() {
   const [user, setUser] = useState();
+
   useEffect(() => {
     const checkAuth = onAuthStateChanged(auth, (user) => {
       if (user) {

@@ -1,5 +1,7 @@
+"use client";
 import Image from "next/image";
-import React from "react";
+import React, {useState} from "react";
+import {CardLoader} from "@/components/loader/cardLoader";
 
 const images = [
   {id: 1, tag: "nature", src: "/assets/images/img1.jpg"},
@@ -17,24 +19,46 @@ const images = [
 ];
 
 export default function Gallery() {
-  return (
-    <div className="max-w-7xl mx-auto grid grid-cols-4 gap-6 py-4">
-      {images.map((image) => {
-        return (
-          <div key={image.id} className="relative rounded-lg overflow-hidden">
-            <Image
-              src={image.src}
-              width={600}
-              height={600}
-              alt="Gallery Image"
-              className="object-cover object-center w-auto h-full"
-            />
-            <p className="py-1 px-2 rounded absolute top-4 left-4 bg-red-500/80 text-white text-sm">
-              {image.tag}
-            </p>
-          </div>
-        );
-      })}
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const handleSearchInputChange = (event: any) => {
+    setSearchTerm(event.target.value.toLowerCase());
+  };
+
+  // Function to filter images based on the search term
+  const filteredImages = images.filter((image) =>
+    image.tag.toLowerCase().includes(searchTerm)
+  );
+
+  return loading ? (
+    <CardLoader itemCount={12} />
+  ) : (
+    <div className="max-w-7xl mx-auto ">
+      <input
+        type="text"
+        placeholder="Search by tag..."
+        value={searchTerm}
+        onChange={handleSearchInputChange}
+        className="block w-full px-4 py-2 mt-4 mb-2 border border-gray rounded-md focus:ring focus:ring-blue-200"
+      />
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {images.map((image) => {
+          return (
+            <div key={image.id} className="relative rounded-lg overflow-hidden">
+              <Image
+                src={image.src}
+                width={600}
+                height={600}
+                alt="Gallery Image"
+                className="object-cover object-center w-auto h-full"
+              />
+              <p className="py-1 px-2 rounded absolute top-4 left-4 bg-red-500/80 text-white text-sm">
+                {image.tag}
+              </p>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
