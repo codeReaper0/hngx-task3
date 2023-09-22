@@ -81,7 +81,7 @@ export default function LoginForm() {
                   <button
                     type="submit"
                     disabled={formik.isSubmitting}
-                    className="block w-full bg-gradient-to-r from-[#376BF6] to-[#3E94FF] text-white rounded-lg py-3 font-semibold max-h-12"
+                    className="block w-full bg-gradient-to-r from-red-600 to-red-500 text-white rounded-lg py-3 font-semibold max-h-12"
                   >
                     {formik.isSubmitting ? (
                       <ClipLoader
