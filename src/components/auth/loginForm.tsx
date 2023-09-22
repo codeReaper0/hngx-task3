@@ -1,13 +1,15 @@
 "use client";
-import React, {CSSProperties, useState, useEffect} from "react";
+import React, {CSSProperties} from "react";
 import {Formik, Form} from "formik";
 import * as yup from "yup";
 import Input from "./input";
 import InputPassword from "./inputPassword";
-import Link from "next/link";
 import {EnvelopeIcon, LockClosedIcon} from "@heroicons/react/24/outline";
 import {useRouter} from "next/navigation";
 import ClipLoader from "react-spinners/ClipLoader";
+import {ToastContainer, toast} from "react-toastify";
+import {signInAuthUserWithEmailAndPassword} from "@/lib/firebase.utils";
+import "react-toastify/dist/ReactToastify.css";
 
 const initialValues = {
   email: "",
@@ -25,22 +27,27 @@ const override: CSSProperties = {
 export default function LoginForm() {
   const router = useRouter();
   const onSubmit = async (values: typeof initialValues, setSubmitting: any) => {
-    // try {
-    //   setShowAnimation(true);
-    //   setTimeout(() => {
-    //     router.push("/dashboard");
-    //   }, 4000);
-    // } catch (error: any) {
-    //   if (error && error.response) {
-    //       position: "top-right",
-    //     });
-    //   } else {
-    //     cogoToast.error("Something went wrong!", {
-    //       position: "top-right",
-    //     });
-    //   }
-    //   setSubmitting(false);
-    // }
+    try {
+      const response = await signInAuthUserWithEmailAndPassword(
+        values.email,
+        values.password
+      );
+      toast.success("Login successful", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        theme: "dark",
+      });
+      const user = response.user;
+      router.push("/");
+    } catch (error: any) {
+      toast.error("Invalid Credentials", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        theme: "dark",
+      });
+    }
   };
   return (
     <>
@@ -70,14 +77,6 @@ export default function LoginForm() {
                   icon={LockClosedIcon}
                 />
 
-                <div className="flex justify-end">
-                  <Link
-                    href="/auth/forgot_password"
-                    className="text-white font-medium"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
                 <div className="w-full">
                   <button
                     type="submit"
@@ -100,6 +99,7 @@ export default function LoginForm() {
           );
         }}
       </Formik>
+      <ToastContainer />
     </>
   );
 }

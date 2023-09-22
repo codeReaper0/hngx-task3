@@ -28,15 +28,6 @@ export default function Login() {
             </div>
             <div className="">
               <LoginForm />
-              <p className="text-ash text-center font-medium mt-4">
-                Don&apos;t have an account?
-                <Link
-                  href="/auth/register"
-                  className="text-white ml-1 underline hover:no-underline"
-                >
-                  Sign up
-                </Link>
-              </p>
             </div>
           </div>
         </div>
