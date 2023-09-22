@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {CardLoader} from "@/components/loader/cardLoader";
 
 const images = [
@@ -21,6 +21,18 @@ const images = [
 export default function Gallery() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000); // 3 seconds
+
+    // Clear the timer if the component unmounts or if searchTerm changes
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [searchTerm]);
+
   const handleSearchInputChange = (event: any) => {
     setSearchTerm(event.target.value.toLowerCase());
   };
@@ -42,7 +54,7 @@ export default function Gallery() {
         className="block w-full px-4 py-2 mt-4 mb-2 border border-gray rounded-md focus:ring focus:ring-blue-200"
       />
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {images.map((image) => {
+        {filteredImages.map((image) => {
           return (
             <div key={image.id} className="relative rounded-lg overflow-hidden">
               <Image

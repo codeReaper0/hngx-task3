@@ -48,12 +48,15 @@ export default function Header() {
           />
         </Link>
         {user ? (
-          <button
-            onClick={handleSignOut}
-            className="py-2 px-4 rounded-md bg-black hover:bg-black/80 font-semibold transition-colors duration-300 ease-in-out text-white"
-          >
-            Logout
-          </button>
+          <div className="flex items-center gap-2">
+            <p className="text-sm text-white font-semibold">User</p>
+            <button
+              onClick={handleSignOut}
+              className="py-2 px-4 rounded-md bg-black hover:bg-black/80 font-semibold transition-colors duration-300 ease-in-out text-white"
+            >
+              Logout
+            </button>
+          </div>
         ) : (
           <Link
             href="/auth/login"
